@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Chirp";
+  src: url("/fonts/chirp-regular.ttf") format("ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Chirp";
+  src: url("/fonts/chirp-medium.ttf") format("ttf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Chirp";
+  src: url("/fonts/chirp-bold.ttf") format("ttf");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Chirp";
+  src: url("/fonts/chirp-heavy.ttf") format("ttf");
+  font-weight: 800;
+  font-style: normal;
+}
+
+body {
+  font-family: "Chirp", Arial, Helvetica, sans-serif;
+}
