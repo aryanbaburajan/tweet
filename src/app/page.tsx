@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchTweetData, Tweet } from "@/components/Tweet";
 import { useState } from "react";
 
 export default function Home() {
@@ -29,12 +30,10 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-center">
           What would you like to embed?
         </h1>
-
         <p>
           Just replace <span className="bold text-[#1D9BF0]">x.com</span> with{" "}
           <span className="bold text-[#1D9BF0]">x-embed.vercel.app</span>
         </p>
-
         <div className="w-full p-2">
           <input
             type="text"
@@ -44,7 +43,6 @@ export default function Home() {
             className="w-full p-3 pl-4 border border-white text-black bg-white focus:outline-none focus:ring-0 focus:border-transparent"
           />
         </div>
-
         <span>
           Made by{" "}
           <a

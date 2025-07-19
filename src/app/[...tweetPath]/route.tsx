@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ImageResponse } from "next/og";
+import { NextRequest } from "next/server";
 import { readFile } from "fs/promises";
 import path from "path";
 import { Tweet, fetchTweetData } from "@/components/Tweet";
+import satori from "satori";
+import sharp from "sharp";
 
 export async function GET(
   request: NextRequest,
@@ -12,46 +13,38 @@ export async function GET(
     params: Promise<{ tweetPath: string[] }>;
   }
 ) {
-  try {
-    const fonts = await loadFonts();
+  const fonts = await loadFonts();
 
-    const tweetPath = (await params).tweetPath.join("/");
-    const tweetData = await fetchTweetData(tweetPath);
+  const tweetPath = (await params).tweetPath.join("/");
+  const tweetData = await fetchTweetData(tweetPath);
 
-    const componentWidth = 600;
+  const componentWidth = 600;
 
-    const image = new ImageResponse(
-      Tweet({
-        data: tweetData,
-        useSatori: true,
-      }),
-      {
-        width: componentWidth,
-        height: undefined,
-        fonts: createFontConfig(fonts),
-      }
-    );
+  const tweetElement = Tweet({
+    data: tweetData,
+    useSatori: true,
+  });
 
-    return new Response(image.body!, {
-      status: 200,
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
-      },
-    });
-  } catch (error: any) {
-    if (process.env.NODE_ENV === "development") {
-      throw error;
-    }
+  const svg = await satori(tweetElement, {
+    width: componentWidth,
+    fonts: createFontConfig(fonts),
+  });
 
-    return new Response(error.message, {
-      status: 500,
-      headers: {
-        "Content-Type": "image/png",
-        "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
-      },
-    });
-  }
+  const pngBuffer = await sharp(Buffer.from(svg))
+    .resize({
+      width: componentWidth * 2,
+      withoutEnlargement: false,
+    })
+    .png()
+    .toBuffer();
+
+  return new Response(pngBuffer, {
+    status: 200,
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=86400, stale-while-revalidate=3600",
+    },
+  });
 }
 
 async function loadFonts() {

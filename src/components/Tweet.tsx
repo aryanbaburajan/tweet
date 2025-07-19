@@ -67,6 +67,9 @@ export function Tweet({
           {...cx(
             "flex flex-row border-[1px] rounded-2xl overflow-hidden border-gray-700 mt-3"
           )}
+          style={{
+            transformOrigin: "top left",
+          }}
         >
           <Tweet data={data.quote} useSatori={useSatori} />
         </div>
@@ -182,8 +185,10 @@ export async function fetchTweetData(tweetPath: string) {
   tweetData.isRoot = true;
 
   if (tweetData.quote) {
-    const response = await fetchFromApi(tweetData.quote.url.substr(14));
-    let quoteTweetData = (await response.json()).tweet;
+    const quoteResponse = await fetchFromApi(tweetData.quote.url.substr(14));
+    let quoteTweetData = quoteResponse.tweet;
+
+    console.log(quoteTweetData);
 
     quoteTweetData.text = wrapText(quoteTweetData.text, 568, 18, "Chirp");
 
